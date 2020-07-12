@@ -24,17 +24,44 @@ holidaysRouter.put('/:ibgeCode/:date', (request, response) => {
     holidays.push(holiday);
     return response.status(201).json({ message: 'ok' });
   }
-
-
-
 });
 
 holidaysRouter.get('/:ibgeCode/:date', (request, response) => {
-  return response.json({ feriados: holidays });
+  const ibgeCode = request.params.ibgeCode;
+  const holidayDate = request.params.date;
+  let name = '';
+
+  const findHolidayInSameDateAndPlace = holidays.find(function (holiday) {
+    if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
+      name = holiday.name;
+      return true;
+    }
+  });
+
+  if (findHolidayInSameDateAndPlace) {
+    return response.status(200).json({ name: name });
+  } else {
+    return response.status(404).json({ message: 'não encontrado' });
+  }
 });
 
 holidaysRouter.delete('/:ibgeCode/:date', (request, response) => {
-  return response.json({ codigoibge: request.params.ibgeCode, data: request.params.date });
+  const ibgeCode = request.params.ibgeCode;
+  const holidayDate = request.params.date;
+  let name = '';
+
+  const findHolidayInSameDateAndPlace = holidays.findIndex(function (holiday, index) {
+    if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
+      return index;
+    }
+  });
+
+  if (findHolidayInSameDateAndPlace > 0) {
+    holidays.splice(findHolidayInSameDateAndPlace, 1)
+    return response.status(200).json({ message: 'ok' });
+  } else {
+    return response.status(404).json({ message: 'não encontrado' });
+  }
 });
 
 export default holidaysRouter;
