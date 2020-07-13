@@ -1,27 +1,23 @@
 import { Router } from 'express';
-import Holiday from '../models/Holiday';
+
+import HolidaysRepository from '../repositories/HolidaysRepository';
 
 const holidaysRouter = Router();
-
-const holidays: Holiday[] = [];
+const holidaysRepository = new HolidaysRepository();
 
 holidaysRouter.put('/:ibgeCode/:date', (request, response) => {
   const ibgeCode = request.params.ibgeCode;
   const holidayDate = request.params.date;
   const name = request.body;
 
-  const findHolidayInSameDateAndPlace = holidays.find(function (holiday) {
-    if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
-      holiday.name = name;
-      return true;
-    }
-  });
+  const findHolidayInSameDateAndPlace = holidaysRepository.findByDateAndPlaceAndUpdate(ibgeCode, holidayDate, name);
 
   if (findHolidayInSameDateAndPlace) {
     return response.status(200).json({ message: 'ok' });
   } else {
-    const holiday = new Holiday(ibgeCode, holidayDate, 'F', name);
-    holidays.push(holiday);
+
+    const holiday = holidaysRepository.create(ibgeCode, holidayDate, 'F', name);
+
     return response.status(201).json({ message: 'ok' });
   }
 });
@@ -31,12 +27,7 @@ holidaysRouter.get('/:ibgeCode/:date', (request, response) => {
   const holidayDate = request.params.date;
   let name = '';
 
-  const findHolidayInSameDateAndPlace = holidays.find(function (holiday) {
-    if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
-      name = holiday.name;
-      return true;
-    }
-  });
+  const findHolidayInSameDateAndPlace = holidaysRepository.findByDateAndPlace(ibgeCode, holidayDate);
 
   if (findHolidayInSameDateAndPlace) {
     return response.status(200).json({ name: name });
@@ -50,14 +41,9 @@ holidaysRouter.delete('/:ibgeCode/:date', (request, response) => {
   const holidayDate = request.params.date;
   let name = '';
 
-  const findHolidayInSameDateAndPlace = holidays.findIndex(function (holiday, index) {
-    if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
-      return index;
-    }
-  });
+  const findHolidayInSameDateAndPlace = holidaysRepository.findByDateAndPlaceAndRemove(ibgeCode, holidayDate);
 
   if (findHolidayInSameDateAndPlace > 0) {
-    holidays.splice(findHolidayInSameDateAndPlace, 1)
     return response.status(200).json({ message: 'ok' });
   } else {
     return response.status(404).json({ message: 'não encontrado' });
