@@ -4,7 +4,7 @@ class Holiday {
   dateType: string;
   name: string;
 
-  constructor(ibgeCode: string, date: string, dateType: string, name: string) {
+  constructor({ ibgeCode, date, dateType, name }: Holiday) {
     this.ibgeCode = ibgeCode;
     this.date = date;
     this.dateType = dateType;

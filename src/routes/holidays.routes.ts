@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import HolidaysRepository from '../repositories/HolidaysRepository';
+import CreateUpdateService from '../services/CreateUpdateHolidayService';
 
 const holidaysRouter = Router();
 const holidaysRepository = new HolidaysRepository();
@@ -10,16 +11,16 @@ holidaysRouter.put('/:ibgeCode/:date', (request, response) => {
   const holidayDate = request.params.date;
   const name = request.body;
 
-  const findHolidayInSameDateAndPlace = holidaysRepository.findByDateAndPlaceAndUpdate(ibgeCode, holidayDate, name);
+  try {
+    const createUpdateHoliday = new CreateUpdateService(holidaysRepository);
 
-  if (findHolidayInSameDateAndPlace) {
-    return response.status(200).json({ message: 'ok' });
-  } else {
+    const returnStatus = createUpdateHoliday.execute({ ibgeCode, holidayDate, dateType: 'F', name });
 
-    const holiday = holidaysRepository.create(ibgeCode, holidayDate, 'F', name);
-
-    return response.status(201).json({ message: 'ok' });
+    return response.status(returnStatus).json({});
+  } catch (err) {
+    return response.status(400).json({ error: err.message });
   }
+
 });
 
 holidaysRouter.get('/:ibgeCode/:date', (request, response) => {

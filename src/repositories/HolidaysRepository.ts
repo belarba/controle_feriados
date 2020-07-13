@@ -1,5 +1,11 @@
 import Holiday from '../models/Holiday';
 
+interface CreateHolidayDTO {
+  ibgeCode: string;
+  holidayDate: string;
+  dateType: string;
+  name: string;
+}
 class HolidaysRepository {
   private holidays: Holiday[];
 
@@ -40,8 +46,8 @@ class HolidaysRepository {
     return findHolidayInSameDateAndPlace || null;
   }
 
-  public create(ibgeCode: string, holidayDate: string, dateType: string, name: string): Holiday {
-    const holiday = new Holiday(ibgeCode, holidayDate, dateType, name);
+  public create({ ibgeCode, holidayDate, dateType, name }: CreateHolidayDTO): Holiday {
+    const holiday = new Holiday({ ibgeCode, date: holidayDate, dateType, name });
     this.holidays.push(holiday);
     return holiday;
   }
