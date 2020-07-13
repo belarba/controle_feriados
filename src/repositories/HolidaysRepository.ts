@@ -1,24 +1,14 @@
 import Holiday from '../models/Holiday';
+import { EntityRepository, Repository } from 'typeorm'
 
-interface CreateHolidayDTO {
-  ibgeCode: string;
-  holidayDate: string;
-  dateType: string;
-  name: string;
-}
-class HolidaysRepository {
-  private holidays: Holiday[];
+@EntityRepository(Holiday)
+class HolidaysRepository extends Repository<Holiday> {
+  public async findByDateAndPlace(ibgeCode: string, holidayDate: string): Promise<Holiday | null> {
 
-  constructor() {
-    this.holidays = [];
-  }
-
-  public findByDateAndPlace(ibgeCode: string, holidayDate: string): Holiday | null {
-    const findHolidayInSameDateAndPlace = this.holidays.find(function (holiday) {
-      if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
-        return holiday;
-      }
+    const findHolidayInSameDateAndPlace = await this.findOne({
+      ibgeCode: ibgeCode, date: holidayDate
     });
+
     return findHolidayInSameDateAndPlace || null;
   }
 
@@ -44,12 +34,6 @@ class HolidaysRepository {
       }
     });
     return findHolidayInSameDateAndPlace || null;
-  }
-
-  public create({ ibgeCode, holidayDate, dateType, name }: CreateHolidayDTO): Holiday {
-    const holiday = new Holiday({ ibgeCode, date: holidayDate, dateType, name });
-    this.holidays.push(holiday);
-    return holiday;
   }
 }
 

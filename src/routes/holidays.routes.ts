@@ -1,20 +1,22 @@
 import { Router } from 'express';
+import { getCustomRepository } from 'typeorm';
 
 import HolidaysRepository from '../repositories/HolidaysRepository';
 import CreateUpdateService from '../services/CreateUpdateHolidayService';
 
 const holidaysRouter = Router();
-const holidaysRepository = new HolidaysRepository();
 
-holidaysRouter.put('/:ibgeCode/:date', (request, response) => {
+holidaysRouter.put('/:ibgeCode/:date', async (request, response) => {
+  const holidaysRepository = getCustomRepository(HolidaysRepository);
+
   const ibgeCode = request.params.ibgeCode;
   const holidayDate = request.params.date;
   const name = request.body;
 
   try {
-    const createUpdateHoliday = new CreateUpdateService(holidaysRepository);
+    const createUpdateHoliday = new CreateUpdateService();
 
-    const returnStatus = createUpdateHoliday.execute({ ibgeCode, holidayDate, dateType: 'F', name });
+    const returnStatus = await createUpdateHoliday.execute({ ibgeCode, holidayDate, dateType: 'F', name });
 
     return response.status(returnStatus).json({});
   } catch (err) {

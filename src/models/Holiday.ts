@@ -1,15 +1,18 @@
-class Holiday {
-  ibgeCode: string;
-  date: string;
-  dateType: string;
-  name: string;
+import { Entity, Column } from 'typeorm';
 
-  constructor({ ibgeCode, date, dateType, name }: Holiday) {
-    this.ibgeCode = ibgeCode;
-    this.date = date;
-    this.dateType = dateType;
-    this.name = name;
-  }
+@Entity('holidays')
+class Holiday {
+  @Column()
+  ibgeCode: string;
+
+  @Column()
+  date: string;
+
+  @Column()
+  dateType: 'F' | 'M';
+
+  @Column()
+  name: string;
 }
 
 export default Holiday;
