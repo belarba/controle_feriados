@@ -1,8 +1,6 @@
-import Holiday from '../models/Holiday';
 import { getCustomRepository } from 'typeorm'
 
 import HolidaysRepository from '../repositories/HolidaysRepository';
-import holidaysRouter from '../routes/holidays.routes';
 
 interface Request {
   ibgeCode: string;
@@ -11,22 +9,19 @@ interface Request {
   name: string;
 }
 
-class CreateUpdateHolidayService {
+class RemoveHolidayService {
   public async execute({ ibgeCode, holidayDate, dateType, name }: Request): Promise<number> {
     const holidaysRepository = getCustomRepository(HolidaysRepository);
 
     const findHolidayInSameDateAndPlace = await holidaysRepository.findByDateAndPlace(ibgeCode, holidayDate);
 
     if (findHolidayInSameDateAndPlace) {
-      findHolidayInSameDateAndPlace.name = name;
-      await holidaysRepository.save(findHolidayInSameDateAndPlace);
+      await holidaysRepository.delete(findHolidayInSameDateAndPlace);
       return 200;
     } else {
-      const holiday = holidaysRepository.create({ ibgeCode, date: holidayDate, dateType, name });
-      await holidaysRepository.save(holiday);
-      return 201;
+      return 404;
     }
   }
 }
 
-export default CreateUpdateHolidayService;
+export default RemoveHolidayService;

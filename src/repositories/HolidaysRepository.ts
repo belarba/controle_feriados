@@ -12,29 +12,29 @@ class HolidaysRepository extends Repository<Holiday> {
     return findHolidayInSameDateAndPlace || null;
   }
 
-  public findByDateAndPlaceAndRemove(ibgeCode: string, holidayDate: string): number {
-    const findHolidayInSameDateAndPlace = this.holidays.findIndex(function (holiday, index) {
-      if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
-        return index;
-      }
-    });
+  // public findByDateAndPlaceAndRemove(ibgeCode: string, holidayDate: string): number {
+  //   const findHolidayInSameDateAndPlace = this.holidays.findIndex(function (holiday, index) {
+  //     if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
+  //       return index;
+  //     }
+  //   });
 
-    if (findHolidayInSameDateAndPlace >= 0) {
-      this.holidays.splice(findHolidayInSameDateAndPlace, 1)
-    }
+  //   if (findHolidayInSameDateAndPlace >= 0) {
+  //     this.holidays.splice(findHolidayInSameDateAndPlace, 1)
+  //   }
 
-    return findHolidayInSameDateAndPlace;
-  }
+  //   return findHolidayInSameDateAndPlace;
+  // }
 
-  public findByDateAndPlaceAndUpdate(ibgeCode: string, holidayDate: string, name: string): Holiday | null {
-    const findHolidayInSameDateAndPlace = this.holidays.find(function (holiday) {
-      if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
-        holiday.name = name;
-        return holiday;
-      }
-    });
-    return findHolidayInSameDateAndPlace || null;
-  }
+  // public findByDateAndPlaceAndUpdate(ibgeCode: string, holidayDate: string, name: string): Holiday | null {
+  //   const findHolidayInSameDateAndPlace = this.holidays.find(function (holiday) {
+  //     if (holiday.ibgeCode == ibgeCode && holiday.date == holidayDate) {
+  //       holiday.name = name;
+  //       return holiday;
+  //     }
+  //   });
+  //   return findHolidayInSameDateAndPlace || null;
+  // }
 }
 
 export default HolidaysRepository;

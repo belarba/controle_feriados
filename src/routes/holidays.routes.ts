@@ -3,12 +3,11 @@ import { getCustomRepository } from 'typeorm';
 
 import HolidaysRepository from '../repositories/HolidaysRepository';
 import CreateUpdateService from '../services/CreateUpdateHolidayService';
+import RemoveService from '../services/RemoveHolidayService';
 
 const holidaysRouter = Router();
 
 holidaysRouter.put('/:ibgeCode/:date', async (request, response) => {
-  const holidaysRepository = getCustomRepository(HolidaysRepository);
-
   const ibgeCode = request.params.ibgeCode;
   const holidayDate = request.params.date;
   const name = request.body;
@@ -25,31 +24,34 @@ holidaysRouter.put('/:ibgeCode/:date', async (request, response) => {
 
 });
 
-holidaysRouter.get('/:ibgeCode/:date', (request, response) => {
+holidaysRouter.get('/:ibgeCode/:date', async (request, response) => {
+  const holidaysRepository = getCustomRepository(HolidaysRepository);
   const ibgeCode = request.params.ibgeCode;
   const holidayDate = request.params.date;
-  let name = '';
 
-  const findHolidayInSameDateAndPlace = holidaysRepository.findByDateAndPlace(ibgeCode, holidayDate);
+  const findHolidayInSameDateAndPlace = await holidaysRepository.findOne({
+    ibgeCode: ibgeCode, date: holidayDate
+  });
 
   if (findHolidayInSameDateAndPlace) {
-    return response.status(200).json({ name: name });
+    return response.status(200).json({ name: findHolidayInSameDateAndPlace.name });
   } else {
     return response.status(404).json({ message: 'não encontrado' });
   }
 });
 
-holidaysRouter.delete('/:ibgeCode/:date', (request, response) => {
+holidaysRouter.delete('/:ibgeCode/:date', async (request, response) => {
   const ibgeCode = request.params.ibgeCode;
   const holidayDate = request.params.date;
-  let name = '';
 
-  const findHolidayInSameDateAndPlace = holidaysRepository.findByDateAndPlaceAndRemove(ibgeCode, holidayDate);
+  try {
+    const removeHoliday = new RemoveService();
 
-  if (findHolidayInSameDateAndPlace > 0) {
-    return response.status(200).json({ message: 'ok' });
-  } else {
-    return response.status(404).json({ message: 'não encontrado' });
+    const returnStatus = await removeHoliday.execute({ ibgeCode, holidayDate, dateType: 'F', name });
+
+    return response.status(returnStatus).json({});
+  } catch (err) {
+    return response.status(400).json({ error: err.message });
   }
 });
 
