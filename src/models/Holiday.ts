@@ -2,6 +2,7 @@ import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity('holidays')
 class Holiday {
+
   @PrimaryColumn()
   ibgeCode: string;
 
@@ -9,7 +10,7 @@ class Holiday {
   date: string;
 
   @Column()
-  dateType: 'F' | 'M';
+  dateType: string;
 
   @Column()
   name: string;

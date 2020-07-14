@@ -19,7 +19,14 @@ class RemoveHolidayService {
       await holidaysRepository.delete(findHolidayInSameDateAndPlace);
       return 200;
     } else {
-      return 404;
+
+      const findHolidayInSameDate = await holidaysRepository.findOne({ date: holidayDate });
+
+      if (findHolidayInSameDate) {
+        return 403;
+      } else {
+        return 404;
+      }
     }
   }
 }

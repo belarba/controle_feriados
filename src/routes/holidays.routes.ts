@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
 
-import HolidaysRepository from '../repositories/HolidaysRepository';
 import CreateUpdateService from '../services/CreateUpdateHolidayService';
 import RemoveService from '../services/RemoveHolidayService';
+import GetService from '../services/GetHolidayService';
 
 const holidaysRouter = Router();
 
@@ -25,16 +24,15 @@ holidaysRouter.put('/:ibgeCode/:date', async (request, response) => {
 });
 
 holidaysRouter.get('/:ibgeCode/:date', async (request, response) => {
-  const holidaysRepository = getCustomRepository(HolidaysRepository);
   const ibgeCode = request.params.ibgeCode;
   const holidayDate = request.params.date;
 
-  const findHolidayInSameDateAndPlace = await holidaysRepository.findOne({
-    ibgeCode: ibgeCode, date: holidayDate
-  });
+  const getHoliday = new GetService();
+
+  const findHolidayInSameDateAndPlace = await getHoliday.execute({ ibgeCode, holidayDate });
 
   if (findHolidayInSameDateAndPlace) {
-    return response.status(200).json({ name: findHolidayInSameDateAndPlace.name });
+    return response.status(200).json({ name: findHolidayInSameDateAndPlace });
   } else {
     return response.status(404).json({ message: 'não encontrado' });
   }
