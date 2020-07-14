@@ -6,10 +6,11 @@
   "scripts": {
     "build": "tsc",
     "dev:server": "ts-node-dev --inspect --ignore-watch node_modules src/server.ts",
-    "start": "ts-node src/index.ts",
+    "start": "node dist/server.js",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "pg": "^8.3.0",
     "reflect-metadata": "^0.1.13",
