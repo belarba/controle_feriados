@@ -10,7 +10,7 @@ const holidaysRouter = Router();
 holidaysRouter.put('/:ibgeCode/:date', async (request, response) => {
   const ibgeCode = request.params.ibgeCode;
   const holidayDate = request.params.date;
-  const name = request.body;
+  const { name } = request.body;
 
   try {
     const createUpdateHoliday = new CreateUpdateService();
