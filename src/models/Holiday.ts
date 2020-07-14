@@ -1,11 +1,11 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity('holidays')
 class Holiday {
-  @Column()
+  @PrimaryColumn()
   ibgeCode: string;
 
-  @Column()
+  @PrimaryColumn()
   date: string;
 
   @Column()

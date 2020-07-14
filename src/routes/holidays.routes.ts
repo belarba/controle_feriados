@@ -47,7 +47,7 @@ holidaysRouter.delete('/:ibgeCode/:date', async (request, response) => {
   try {
     const removeHoliday = new RemoveService();
 
-    const returnStatus = await removeHoliday.execute({ ibgeCode, holidayDate, dateType: 'F', name });
+    const returnStatus = await removeHoliday.execute({ ibgeCode, holidayDate, dateType: 'F', name: '' });
 
     return response.status(returnStatus).json({});
   } catch (err) {
